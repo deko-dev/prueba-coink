@@ -1,20 +1,49 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" class="pointer-events-none">
+        <ion-icon slot="icon-only" name="ellipsis-vertical" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="w-full flex flex-col justifi-between items-center pt-6">
+    <ion-row class="flex flex-col justify-between items-center gap-4">
+      <ion-col size="12">
+        <img src="assets/icon/splash.png" alt="" class="mx-auto">
+      </ion-col>
+      <ion-col size="12">
+        <ion-label color="primary" class="uppercase text-center font-bold text-lg block w-10/12 mx-auto">La alcancía que siempre te acompaña</ion-label>
+      </ion-col>
+    </ion-row>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <ion-row class="mt-12">
+      <ion-col size="12" class="w-6/12">
+        <ion-label color="medium" class="text-sm italic">Desliza para aprender más</ion-label>
+        <div class="points flex justify-between items-center mt-3">
+          <span 
+            *ngFor="let point of pointsSlides; let i = index"
+            class="point rounded-full block"
+            [ngClass]="{'active': i === 0 }"
+          ></span>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="w-full px-4 mt-16">
+      <ion-col size="12">
+        <ion-button (click)="register()" expand="block" shape="round" color="primary" class="h-50">
+          <ion-label color="secondary" class="capitalize text-base">Regístrate</ion-label>
+        </ion-button>
+      </ion-col>
+      <ion-col size="12">
+        <ion-button (click)="login()" expand="block" shape="round" color="secondary" class="h-50">
+          <ion-label color="primary" class="capitalize text-base">Ingresa</ion-label>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
   </div>
 </ion-content>
