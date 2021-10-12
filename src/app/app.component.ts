@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SplashScreen } from '@capacitor/splash-screen';
 import { AlertController, NavController, Platform } from '@ionic/angular';
 @Component({
   selector: 'app-root',
@@ -19,7 +20,8 @@ export class AppComponent {
 
   initializateApp() {
     this.platform.ready().then( () => {
-      this.navController.navigateForward('splash', { replaceUrl:true });
+      SplashScreen.hide();
+      // this.navController.navigateForward('splash', { replaceUrl:true });
     });
   }
 
