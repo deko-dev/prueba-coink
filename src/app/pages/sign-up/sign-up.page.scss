@@ -1,0 +1,27 @@
+.steps {
+    .step-box {
+        .line-step{
+            border: .3px solid #D3D3D3;
+            border-radius: 1px;
+            width: 50px;
+        }
+        .step{
+            border-color: #D3D3D3;
+            &.active{
+                span {
+                    background-color: var(--ion-color-primary) !important;
+                    width: 8px;
+                    height: 8px;
+                }
+            }
+        }
+    }
+}
+
+.secondary {
+    color: var(--ion-color-secondary);
+}
+
+.danger {
+    color: var(--ion-color-danger);
+}

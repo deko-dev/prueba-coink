@@ -1,5 +1,5 @@
 {
-  "name": "coink-register",
+  "name": "CoinkApp",
   "integrations": {
     "capacitor": {}
   },

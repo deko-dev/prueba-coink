@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="presentAlertConfirm()">
+        <ion-icon slot="icon-only" name="chevron-back" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="uppercase text-base text-center w-10/12" color="secondary">{{stepActive.name}}</ion-title>
+  </ion-toolbar>
+  <div class="steps w-10/12 my-1 flex justify-between items-center gap-1 mx-auto">
+    <div 
+      *ngFor="let step of steps"
+      class="step-box flex justify-between items-center"
+      [ngClass]="
+        {
+          'w-3/12': step.id !== steps[steps.length-1].id,
+          'w-1/12': step.id === steps[steps.length-1].id
+        }
+      "
+    >
+      <div 
+        class="step rounded-full border-2 w-4 h-4 flex justify-center items-center"
+        [ngClass]="{'active': step.id === stepActive.id}"
+      >
+        <span class="block m-auto rounded-full"></span>
+      </div>
+      <span class="block line-step" *ngIf="step.id !== steps[steps.length-1].id"></span>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content>
+  <div class="w-full">
+    <app-step-phone-number (sendPhoneNumber)="verifyPhoneNumber()" *ngIf="stepActive.id === 'phone_number'" [userData]="userData"></app-step-phone-number>
+  </div>
+
+</ion-content>

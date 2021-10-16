@@ -1,0 +1,19 @@
+.button-check {
+    ion-button{
+        --padding-bottom: 0px;
+        --padding-end:0px;
+        --padding-start:0px;
+        --padding-top:0px;
+        --border-radius: 50%;
+        --background: #AAAAAA;
+        &.check-activated{
+            --background: var(--ion-color-primary);
+        }
+    }
+}
+
+.icon-btn {
+    ion-icon {
+        font-size: 40px;
+    }
+}

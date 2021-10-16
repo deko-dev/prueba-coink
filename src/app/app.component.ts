@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { AlertController, NavController, Platform } from '@ionic/angular';
+import { Uid } from '@ionic-native/uid/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -11,7 +13,9 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private alertController: AlertController,
-    private navController: NavController
+    private navController: NavController,
+    private uid: Uid,
+    private androidPermissions: AndroidPermissions
   ) {
     this.initializateApp();
     this.backButtonEvent();
@@ -19,8 +23,10 @@ export class AppComponent {
 
 
   initializateApp() {
-    this.platform.ready().then( () => {
+    this.platform.ready().then( async () => {
       SplashScreen.hide();
+      const response = await this.getImei();
+      console.log(response);
       // this.navController.navigateForward('splash', { replaceUrl:true });
     });
   }
@@ -53,6 +59,27 @@ export class AppComponent {
     });
 
     await alert.present();
+  }
+
+  async getImei() {
+    const { hasPermission } = await this.androidPermissions.checkPermission(
+      this.androidPermissions.PERMISSION.READ_PHONE_STATE
+    );
+
+    if (!hasPermission) {
+      const result = await this.androidPermissions.requestPermission(
+        this.androidPermissions.PERMISSION.READ_PHONE_STATE
+      );
+
+      if (!result.hasPermission) {
+        throw new Error('Permissions required');
+      }
+
+      // ok, a user gave us permission, we can get him identifiers after restart app
+      return;
+    }
+
+    return this.uid.IMEI;
   }
 
 

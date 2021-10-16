@@ -1,0 +1,26 @@
+<div class="mt-12 w-full">
+  <ion-row class="w-11/12 h-24 flex justify-between items-center mx-auto border-color-primary pb-12">
+    <ion-col size="3" class="flex justify-center items-center">
+      <img src="assets/images/phone-number-img.svg" alt="">
+    </ion-col>
+    <ion-col size="9">
+      <ion-label color="medium" class="text-base w-full">Para comenzar, por favor ingresa <span class="font-bold">tu número celular</span></ion-label>
+    </ion-col>  
+  </ion-row>
+
+  <ion-card class="mt-4">
+    <ion-card-content class="flex justify-center items-center gap-2">
+      <img src="assets/images/col-flag.png" alt="" class="w-6">
+      <ion-label class="text-sm font-semibold phone-number-label" color="medium">
+        +57 <span  [ngClass]="{'whitout-number': userData?.phone_number.length === 0}">
+              ( {{ textPhoneNumber }} )
+          </span>
+      </ion-label>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="keyboard-number mt-8">
+    <app-keyboard-number  (sendPhone)="sendPhoneNumber.emit()" (deleteNumber)="deleteLastNumber()"  (numberTouched)="addNumberTouched($event)" [disabledCheck]="userData.phone_number.length === 10"></app-keyboard-number>
+  </div>
+
+</div>
