@@ -39,7 +39,14 @@ export class SignUpService {
 
   verifyDirectLogin(payload: string){
     return this.http.post(
-      `${environment.host}//login/verifyDirectLogin?apiKey=441252`,
+      `${environment.host}/login/verifyDirectLogin?apiKey=${environment.apiKey}`,
+      { payload }
+    ).toPromise();
+  }
+
+  signUpCifi(payload: string){
+    return this.http.post(
+      `${environment.host}/signup/cifin?apiKey=${environment.apiKey}`,
       { payload }
     ).toPromise();
   }

@@ -1,0 +1,53 @@
+<div class="mt-12 w-full">
+  <ion-row class="w-11/12 flex justify-between items-center mx-auto border-color-primary pb-4">
+    <ion-col size="3" class="flex justify-center items-center">
+      <img src="assets/images/security-img.svg" alt="">
+    </ion-col>
+    <ion-col size="9">
+      <h2 color="secondary" class="text-base w-full font-bold mb-1">CONFIGURA TU CUENTA</h2>
+      <ion-label color="medium" class="text-sm w-full">Escribe el correo que estará vinculado a tu cuenta y crea un PIN de seguridad</ion-label>
+    </ion-col>  
+  </ion-row>
+
+  <ion-row>
+    <form [formGroup]="formSecurityData" (ngSubmit)="sendSecurityData($event)" class="w-11/12 mx-auto">
+      <!-- Correo electrónico -->
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Correo electrónico</ion-label>
+          <ion-input formControlName="email" type="text"></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <!-- Confirmar correo electrónico -->
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Confirmar correo electrónico</ion-label>
+          <ion-input formControlName="email_confirm" type="text"></ion-input>
+        </ion-item>
+      </ion-col>
+      
+      <!-- PIN de seguridad -->
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">PIN de seguridad</ion-label>
+          <ion-input formControlName="pin" type="text"></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <!-- Confirmar Pin de seguridad -->
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Confirmar P de seguridad</ion-label>
+          <ion-input formControlName="pin_confirm" type="text"></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-button type="submit" expand="block" shape="round" color="primary" class="h-14">
+          Siguiente
+        </ion-button>
+      </ion-col>
+    </form>
+  </ion-row>
+</div>

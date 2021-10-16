@@ -1,0 +1,94 @@
+<div class="mt-12 w-full">
+  <ion-row class="w-11/12 flex justify-between items-center mx-auto border-color-primary pb-4">
+    <ion-col size="3" class="flex justify-center items-center">
+      <img src="assets/images/account-data-img.svg" alt="">
+    </ion-col>
+    <ion-col size="9">
+      <h2 color="secondary" class="text-base w-full font-bold mb-1">¿CUALES SON TUS DATOS?</h2>
+      <ion-label color="medium" class="text-sm w-full">Ahora necesitamos saber algunos datos tuyos</ion-label>
+    </ion-col>  
+  </ion-row>
+
+  <ion-row>
+    <form [formGroup]="formAccountData" (ngSubmit)="sendAccountData($event)" class="w-11/12 mx-auto">
+      <!-- Nombres -->
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Nombres</ion-label>
+          <ion-input formControlName="names" type="text"></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <!-- Apellidos -->
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Apellidos</ion-label>
+          <ion-input formControlName="last_names" type="text"></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <!-- Tipo de Documento -->
+      <ion-col size="12">
+        <ion-item>
+          <ion-label>Tipo de documento</ion-label>
+          <ion-select interface="action-sheet" cancelText="" formControlName="document_type">
+            <ion-select-option *ngFor="let documentType of documentsTypes" [value]="documentType.name">{{ documentType.name }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <!-- Número de documento -->
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Número de documento</ion-label>
+          <ion-input formControlName="document_number" type="number"></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <!-- Fecha de nacimiento -->
+      <ion-col size="12">
+        <ion-item>
+          <ion-label>Fecha de nacimiento</ion-label>
+          <ion-datetime 
+            formControlName="birth_date"
+            [displayFormat]="'DD MMM YYYY'"
+            [max]="minBirthDate"
+            doneText="Ok"
+            cancelText="Cancelar"
+            monthShortNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+
+      <!-- Fecha de expedición del documento -->
+      <ion-col size="12">
+        <ion-item>
+          <ion-label>Fecha de expedición del documento</ion-label>
+          <ion-datetime 
+            formControlName="expedition_date"
+            [displayFormat]="'DD MMMM YYYY'"
+            doneText="Ok"
+            cancelText="Cancelar"
+            monthShortNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+
+      <!-- Genero -->
+      <ion-col size="12">
+        <ion-item>
+          <ion-label>Género que aprece en tu documento de identidad</ion-label>
+          <ion-select formControlName="gender_id" interface="action-sheet" cancelText="" formControlName="gender_id">
+            <ion-select-option *ngFor="let gender of genders" [value]="gender.id">{{ gender.name }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-button type="submit" expand="block" shape="round" color="primary" class="h-14">
+          Continuar
+        </ion-button>
+      </ion-col>
+    </form>
+  </ion-row>
+</div>

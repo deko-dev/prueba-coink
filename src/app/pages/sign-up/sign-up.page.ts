@@ -34,10 +34,8 @@ export class SignUpPage implements OnInit {
     }
   ];
 
-  stepActive: StepType = {
-    id: 'phone_number',
-    name: 'Número Celular'
-  };
+  stepActiveNumber = 2;
+  stepActive: StepType;
 
   userData: SignUpData = {
     phone_number: '',
@@ -70,6 +68,7 @@ export class SignUpPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.stepActive = this.steps[this.stepActiveNumber];
     this.getImei();
     this.backButtonEvent();
   }
@@ -83,19 +82,19 @@ export class SignUpPage implements OnInit {
   }
 
   async verifyPhoneNumber(){
-    const phone = this.userData.phone_number;
+    const { phone_number, imei } = this.userData;
     const payload = {
-      phone_number: Number(`57${phone}`),
-      imei: Number(this.userData.imei),
+      phone_number: Number(`57${phone_number}`),
+      imei: Number(imei),
     };
-    console.log(payload);
     const payloadStr = this._functionsService.encrypt( JSON.stringify(payload), environment.keyHash );
-    console.log(payloadStr);
     try {
       const response = await this._signUpService.verifyDirectLogin(payloadStr);
       console.log(response);
     } catch (error) {
       console.log(error);
+      this.stepActiveNumber++;
+      this.stepActive = this.steps[this.stepActiveNumber];
     }
   }
 
@@ -106,28 +105,39 @@ export class SignUpPage implements OnInit {
   }
 
   async presentAlertConfirm() {
-    const alert = await this.alertController.create({
-      header: '¿Estas seguro?',
-      message: 'Si cancelas la verificación, tu progreso se perderá y tendrás que Volver a empezar',
-      buttons: [
-        {
-          text: 'NO',
-          role: 'cancel',
-          cssClass: 'secondary font-bold',
-          handler: (blah) => {}
-        },
-        {
-          text: 'CANCELAR',
-          cssClass: 'danger font-bold',
-          handler: () => {
-            this.navController.back();
+    console.log(this.stepActiveNumber);
+    if(this.stepActiveNumber === 0){
+      const alert = await this.alertController.create({
+        header: '¿Estas seguro?',
+        message: 'Si cancelas la verificación, tu progreso se perderá y tendrás que Volver a empezar',
+        buttons: [
+          {
+            text: 'NO',
+            role: 'cancel',
+            cssClass: 'secondary font-bold',
+            handler: (blah) => {}
+          },
+          {
+            text: 'CANCELAR',
+            cssClass: 'danger font-bold',
+            handler: () => {
+              this.navController.back();
+            }
           }
-        }
-      ]
-    });
-
-    await alert.present();
+        ]
+      });
+      await alert.present();
+    } else {
+      this.stepActiveNumber--;
+      this.stepActive = this.steps[this.stepActiveNumber];
+    }
   }
 
+  saveUserData(event){
+    Object.assign(this.userData, event);
+    console.log(this.userData);
+    // this.stepActiveNumber++;
+    // this.stepActive = this.steps[this.stepActiveNumber];
+  }
 
 }

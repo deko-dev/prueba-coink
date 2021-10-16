@@ -32,6 +32,9 @@
 <ion-content>
   <div class="w-full">
     <app-step-phone-number (sendPhoneNumber)="verifyPhoneNumber()" *ngIf="stepActive.id === 'phone_number'" [userData]="userData"></app-step-phone-number>
+    <app-account-data (accountData)="saveUserData($event)" [userData]="userData" *ngIf="stepActive.id === 'account_data'"></app-account-data>
+
+    <app-security-data (securityData)="saveUserData($event)" [userData]="userData" *ngIf="stepActive.id === 'security'"></app-security-data>
   </div>
 
 </ion-content>
