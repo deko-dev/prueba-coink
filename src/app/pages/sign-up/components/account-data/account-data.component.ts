@@ -1,8 +1,10 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DocumentsType, Genders } from 'src/utils/constants';
 import { SignUpData } from '../../sign-up.models';
+import { FunctionsService } from '../../../../../utils/functions';
 
 interface SelectType {
   id: number;
@@ -24,10 +26,12 @@ export class AccountDataComponent implements OnInit {
   public genders = Genders;
   public documentsTypes = DocumentsType;
 
+  attemptsCC = 0;
   minBirthDate: string;
 
   constructor(
     private fb: FormBuilder,
+    private _functionsService: FunctionsService
   ) { }
 
   ngOnInit() {
@@ -50,12 +54,19 @@ export class AccountDataComponent implements OnInit {
   }
 
   async sendAccountData(event: Event) {
+    this._functionsService.loadingAlert('Verificando documento');
+    this.attemptsCC++;
     event.stopPropagation();
     event.preventDefault();
-    this.accountData.emit(this.formAccountData.value);
-  }
-
-  findSelect(idFind: number, arrToFind: SelectType[]): string{
-    return arrToFind.find( (select) => select.id === idFind).name;
+    const { document_number } = this.formAccountData.value;
+    setTimeout(() => {
+      this._functionsService.loading.dismiss();
+      // if(this.attemptsCC < 2){
+      //   const message = `El numero de documento <span class="font-bold">${document_number}</span> ya está asociado a otro usuario.`;
+      //   this._functionsService.messageAlert(message);
+      // } else {
+      // }
+      this.accountData.emit(this.formAccountData.value);
+    }, 3000);
   }
 }

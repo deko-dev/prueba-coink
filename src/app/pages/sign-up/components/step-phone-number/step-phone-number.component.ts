@@ -20,7 +20,6 @@ export class StepPhoneNumberComponent implements OnInit {
   @Output() eventName = new EventEmitter<SignUpData>();
   @Output() sendPhoneNumber: EventEmitter<any> = new EventEmitter();
 
-  loading: HTMLIonLoadingElement;
   textPhoneNumber = '';
   textCodeNumber = 'XXXX';
   codeSend = false;
@@ -29,8 +28,6 @@ export class StepPhoneNumberComponent implements OnInit {
   constructor(
     private _functionsService: FunctionsService,
     private _signUpService: SignUpService,
-    private loadingController: LoadingController,
-    private alertController: AlertController
   ) { }
 
   ngOnInit() {
@@ -87,10 +84,10 @@ export class StepPhoneNumberComponent implements OnInit {
 
   sendCode(event: Event){
     if(this.codeSend){
-      this.verifyPhoneNumberAlert('Verificando token OTP');
+      this._functionsService.loadingAlert('Verificando token OTP');
       setTimeout(() => {
         this.sendPhoneNumber.emit();
-        this.loading.dismiss();
+        this._functionsService.loading.dismiss();
       }, 3000);
     } else {
       this.verifyPhoneNumber();
@@ -98,7 +95,7 @@ export class StepPhoneNumberComponent implements OnInit {
   }
 
   async verifyPhoneNumber(){
-    this.verifyPhoneNumberAlert('Verificando número de telefono');
+    this._functionsService.loadingAlert('Verificando número de telefono');
     const { phone_number, imei } = this.userData;
     const payload = {
       phone_number: Number(`57${phone_number}`),
@@ -107,35 +104,15 @@ export class StepPhoneNumberComponent implements OnInit {
     const payloadStr = this._functionsService.encrypt( JSON.stringify(payload), environment.keyHash );
     try {
       const response = await this._signUpService.verifyDirectLogin(payloadStr);
-      await this.loading.dismiss();
+      await this._functionsService.loading.dismiss();
       this.buttonCheck = false;
     } catch (error) {
       this.codeSend = true;
       this.buttonCheck = false;
-      await this.loading.dismiss();
-      const message = `El número <span class="font-bold">${this.userData.phone_number}</span> ya está asociado a otro usuario.`;
-      this.messageAlert(message);
+      await this._functionsService.loading.dismiss();
+      // const message = `El número <span class="font-bold">${this.userData.phone_number}</span> ya está asociado a otro usuario.`;
+      // this._functionsService.messageAlert(message);
     }
   }
 
-  async verifyPhoneNumberAlert(message: string) {
-    this.loading = await this.loadingController.create({
-      message,
-      spinner: 'circles',
-    });
-    await this.loading.present();
-  }
-
-  async messageAlert(message: string) {
-    const alert = await this.alertController.create({
-      header: 'Error',
-      message,
-      buttons: ['VOLVER']
-    });
-
-    await alert.present();
-
-    const { role } = await alert.onDidDismiss();
-    console.log('onDidDismiss resolved with role', role);
-  }
 }

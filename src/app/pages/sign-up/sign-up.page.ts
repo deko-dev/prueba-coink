@@ -124,8 +124,8 @@ export class SignUpPage implements OnInit {
   saveUserData(event){
     Object.assign(this.userData, event);
     console.log(this.userData);
-    // this.stepActiveNumber++;
-    // this.stepActive = this.steps[this.stepActiveNumber];
+    this.stepActiveNumber++;
+    this.stepActive = this.steps[this.stepActiveNumber];
   }
 
 }
