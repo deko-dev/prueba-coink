@@ -82,20 +82,8 @@ export class SignUpPage implements OnInit {
   }
 
   async verifyPhoneNumber(){
-    const { phone_number, imei } = this.userData;
-    const payload = {
-      phone_number: Number(`57${phone_number}`),
-      imei: Number(imei),
-    };
-    const payloadStr = this._functionsService.encrypt( JSON.stringify(payload), environment.keyHash );
-    try {
-      const response = await this._signUpService.verifyDirectLogin(payloadStr);
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-      this.stepActiveNumber++;
-      this.stepActive = this.steps[this.stepActiveNumber];
-    }
+    this.stepActiveNumber++;
+    this.stepActive = this.steps[this.stepActiveNumber];
   }
 
   backButtonEvent() {

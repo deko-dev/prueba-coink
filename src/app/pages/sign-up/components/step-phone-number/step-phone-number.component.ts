@@ -1,7 +1,13 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable @typescript-eslint/prefer-for-of */
 /* eslint-disable id-blacklist */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SignUpData } from '../../sign-up.models';
+import { FunctionsService } from '../../../../../utils/functions';
+import { SignUpService } from '../../sign-up.service';
+import { environment } from '../../../../../environments/environment.prod';
+import { AlertController, LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-step-phone-number',
@@ -14,9 +20,18 @@ export class StepPhoneNumberComponent implements OnInit {
   @Output() eventName = new EventEmitter<SignUpData>();
   @Output() sendPhoneNumber: EventEmitter<any> = new EventEmitter();
 
+  loading: HTMLIonLoadingElement;
   textPhoneNumber = '';
+  textCodeNumber = 'XXXX';
+  codeSend = false;
+  buttonCheck = false;
 
-  constructor() { }
+  constructor(
+    private _functionsService: FunctionsService,
+    private _signUpService: SignUpService,
+    private loadingController: LoadingController,
+    private alertController: AlertController
+  ) { }
 
   ngOnInit() {
     this.textNumber();
@@ -31,17 +46,34 @@ export class StepPhoneNumberComponent implements OnInit {
         this.textPhoneNumber += ' - ';
       }
     }
+    this.buttonCheck = this.userData.phone_number.length === 10;
+  }
+
+  textCode(number: number){
+    const arrCode = this.textCodeNumber.split('');
+    for (let index = 0; index < 4; index++) {
+      if(arrCode[index] === 'X'){
+        arrCode[index] = number.toString();
+        break;
+      }
+    }
+    this.buttonCheck = !arrCode.includes('X');
+    this.textCodeNumber = arrCode.join('');
   }
 
   /**
    * Method for added number touched to data of user
    */
   addNumberTouched(numberTouch: number): void{
-    if(this.userData.phone_number.length === 10){
-      return;
+    if(this.codeSend){
+      this.textCode(numberTouch);
+    } else {
+      if(this.userData.phone_number.length === 10){
+        return;
+      }
+      this.userData.phone_number += numberTouch.toString();
+      this.textNumber();
     }
-    this.userData.phone_number += numberTouch.toString();
-    this.textNumber();
   }
 
   /**
@@ -53,4 +85,57 @@ export class StepPhoneNumberComponent implements OnInit {
     this.textNumber();
   }
 
+  sendCode(event: Event){
+    if(this.codeSend){
+      this.verifyPhoneNumberAlert('Verificando token OTP');
+      setTimeout(() => {
+        this.sendPhoneNumber.emit();
+        this.loading.dismiss();
+      }, 3000);
+    } else {
+      this.verifyPhoneNumber();
+    }
+  }
+
+  async verifyPhoneNumber(){
+    this.verifyPhoneNumberAlert('Verificando número de telefono');
+    const { phone_number, imei } = this.userData;
+    const payload = {
+      phone_number: Number(`57${phone_number}`),
+      imei: Number(imei),
+    };
+    const payloadStr = this._functionsService.encrypt( JSON.stringify(payload), environment.keyHash );
+    try {
+      const response = await this._signUpService.verifyDirectLogin(payloadStr);
+      await this.loading.dismiss();
+      this.buttonCheck = false;
+    } catch (error) {
+      this.codeSend = true;
+      this.buttonCheck = false;
+      await this.loading.dismiss();
+      const message = `El número <span class="font-bold">${this.userData.phone_number}</span> ya está asociado a otro usuario.`;
+      this.messageAlert(message);
+    }
+  }
+
+  async verifyPhoneNumberAlert(message: string) {
+    this.loading = await this.loadingController.create({
+      message,
+      spinner: 'circles',
+    });
+    await this.loading.present();
+  }
+
+  async messageAlert(message: string) {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message,
+      buttons: ['VOLVER']
+    });
+
+    await alert.present();
+
+    const { role } = await alert.onDidDismiss();
+    console.log('onDidDismiss resolved with role', role);
+  }
 }
