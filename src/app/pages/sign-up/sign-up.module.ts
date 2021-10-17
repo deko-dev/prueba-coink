@@ -11,6 +11,7 @@ import { StepPhoneNumberComponent } from './components/step-phone-number/step-ph
 import { ComponentsModule } from '../../components/components.module';
 import { AccountDataComponent } from './components/account-data/account-data.component';
 import { SecurityDataComponent } from './components/security-data/security-data.component';
+import { DataAuthorizationComponent } from './components/data-authorization/data-authorization.component';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { SecurityDataComponent } from './components/security-data/security-data.
     SignUpPage,
     StepPhoneNumberComponent,
     AccountDataComponent,
-    SecurityDataComponent
+    SecurityDataComponent,
+    DataAuthorizationComponent
   ]
 })
 export class SignUpPageModule {}

@@ -34,7 +34,7 @@ export class SignUpPage implements OnInit {
     }
   ];
 
-  stepActiveNumber = 2;
+  stepActiveNumber = 0;
   stepActive: StepType;
 
   userData: SignUpData = {
